@@ -12,7 +12,6 @@ const Page1 = () => {
   const { handleSubmit, register } = useForm();
   const [formData, setFormData] = useState(undefined);
   const [isLoading, setLoading] = useState(undefined);
-  const [error, setError] = useState(undefined);
   const { user, setUser, setSession } = React.useContext(AuthContext);
 
   const onSubmit = async (data) => {
@@ -26,11 +25,22 @@ const Page1 = () => {
     async function login() {
       if (formData) {
         setLoading(true);
+
+        // Simulate a request to obtain auth session (i.e., login)
         await timeout(1000);
         setSession({ id: 1 });
+
+        // Simulate a request to obtain user info
         await timeout(1000);
         setUser({ name: "Kevin" });
-        setLoading(false);
+
+        // By the time this call gets processed, the Redirect will have been triggered
+        // thus resulting in the error:
+        //
+        // Can't perform a React state update on an unmounted component.
+        // This is a no-op, but it indicates a memory leak in your application.
+        // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
+        setLoading(false)
       }
     }
 
